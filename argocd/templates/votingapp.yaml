@@ -1,0 +1,29 @@
+{{- $targetAppName := "votingapp" -}}
+{{- $targetNamespace := .Values.spec.source.targetRevision -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $targetAppName }}
+  labels:
+    app: {{ $targetAppName }}
+    env: {{ $targetNamespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: {{ $targetNamespace }}
+    server: {{ .Values.spec.destination.server }}
+  source:
+    path: helmvotingapp/helm/votingapp
+    repoURL: "{{ .Values.spec.source.repoURL }}"
+    targetRevision: {{ $targetNamespace }}
+    helm:
+      valueFiles:
+        - values.yaml
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

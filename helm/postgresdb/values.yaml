@@ -1,0 +1,61 @@
+# Default values for postgresdb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "16.2-alpine3.19"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 5432
+
+env:
+  POSTGRES_PASSWORD: postgres
+  PoSTGRES_USER: postgres
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes:
+  - name: postgres-persist-storage
+    persistentVolumeClaim:
+      claimName: postgresdb-pvc
+
+volumeMounts:
+  - name: postgres-persist-storage
+    mountPath: /var/lib/postgresql/data
+
+pv:
+  storage: 5Gi
+  accessModes: ReadWriteOnce
+  hostPath: "/tmp/pg-data"
+
+pvc:
+  storage: 5Gi
+  accessModes: ReadWriteOnce
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
