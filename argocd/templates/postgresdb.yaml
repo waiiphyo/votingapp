@@ -5,8 +5,8 @@ kind: Application
 metadata:
   name: {{ $targetAppName }}
   labels:
-    app: {{ $targetAppName }}
-    env: {{ $targetNamespace }}
+    app: postgresdb
+    env: qa
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
