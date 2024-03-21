@@ -1,5 +1,5 @@
 {{- $targetAppName := "postgresdb" -}}
-{{- $targetNamespace := .Values.spec.source.namespace -}}
+{{- $targetNamespace := .Values.spec.source.targetRevision -}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -15,15 +15,15 @@ spec:
     server: {{ .Values.spec.destination.server }}
   source:
     path: helm/postgresdb
-    repoURL: "{{ .Values.spec.source.repoURL }}"
-    targetRevision: {{ $targetNamespace }}
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.spec.source.targetRevision }}
     helm:
       valueFiles:
         - values.yaml
   project: default
- # syncPolicy:
-  #  automated:
-   #   prune: true
-    #  selfHeal: true
-    #syncOptions:
-     # - CreateNamespace=true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

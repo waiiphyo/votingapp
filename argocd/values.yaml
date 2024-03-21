@@ -2,5 +2,5 @@ spec:
   destination:
     server: https://kubernetes.default.svc
   source:
-    repoURL: https://gitlab.com/aungheinkyawhb/helm-projects.git
-    targetRevision: master
+    repoURL: https://github.com/waiiphyo/votingapp.git
+    targetRevision: qa
